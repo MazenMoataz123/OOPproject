@@ -23,6 +23,10 @@ namespace finnn
             Email = email;
             Phone = phone;
         }
+        public override string ToString()
+        {
+            return $"{Name},{Email},{Phone}";
+        }
     }
 
     class PhoneBook
@@ -41,8 +45,7 @@ namespace finnn
 
         public void LoadContactsFromFile(string filename)
         {
-            try
-            {
+
                 string[] lines = File.ReadAllLines(filename);
                 foreach (string line in lines)
                 {
@@ -56,13 +59,6 @@ namespace finnn
                         AddContact(contact);
                     }
                 }
-                Console.WriteLine("Contacts loaded successfully.");
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error loading contacts: " + ex.Message);
-            }
         }
 
         public void PrintContacts()
@@ -72,6 +68,59 @@ namespace finnn
                 Console.WriteLine($"Name: {contact.Name}, Email: {contact.Email}, Phone: {contact.Phone}");
             }
         }
+
+        public void SaveContactsToFile(string filename)
+        {
+                using (StreamWriter writer = new StreamWriter(filename))
+                {
+                    foreach (Contact contact in contacts)
+                    {
+                        writer.WriteLine(contact.ToString());
+                    }
+                }
+        }
+        public int SearchByName(string name) 
+        {
+            for (int i = 0; i < contacts.Count; i++)
+            {
+                if (contacts[i].Name == name) 
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public int SearchByEmail(string email)
+        {
+            for (int i = 0; i < contacts.Count; i++)
+            {
+                if (contacts[i].Email == email)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public int SearchByPhone(string number)
+        {
+            for (int i = 0; i < contacts.Count; i++)
+            {
+                if (contacts[i].Phone == number)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        public bool DeleteContact(int idx) 
+        {
+            if(idx < contacts.Count && idx >= 0)
+            {
+                contacts.RemoveAt(idx);
+                return true;
+            }
+            else { return false; }  
+        }
     }
 
     class Program
@@ -79,8 +128,9 @@ namespace finnn
         static void Main(string[] args)
         {
             PhoneBook phoneBook = new PhoneBook();
-            phoneBook.LoadContactsFromFile("C:\\Users\\User\\source\\repos\\finnn\\contacts.txt");
-            phoneBook.PrintContacts();
+            phoneBook.LoadContactsFromFile("contacts.txt");
+            phoneBook.DeleteContact(0);
+            phoneBook.SaveContactsToFile("contacts.txt");
         }
     }
 }
