@@ -79,38 +79,44 @@ namespace finnn
                     }
                 }
         }
-        public int SearchByName(string name) 
+        public int[] SearchByName(string name)
         {
+            List<int> foundIndexes = new List<int>();
+
             for (int i = 0; i < contacts.Count; i++)
             {
-                if (contacts[i].Name == name) 
+                if (contacts[i].Name.Contains(name) == true)
                 {
-                    return i;
+                    foundIndexes.Add(i);
                 }
             }
-            return -1;
+            return foundIndexes.ToArray();
         }
-        public int SearchByEmail(string email)
+        public int[] SearchByEmail(string email)
         {
+            List<int> foundIndexes = new List<int>();
+
             for (int i = 0; i < contacts.Count; i++)
             {
-                if (contacts[i].Email == email)
+                if (contacts[i].Email.Contains(email) == true)
                 {
-                    return i;
+                    foundIndexes.Add(i);
                 }
             }
-            return -1;
+            return foundIndexes.ToArray();
         }
-        public int SearchByPhone(string number)
+        public int[] SearchByPhone(string number)
         {
+            List<int> foundIndexes = new List<int>();
+
             for (int i = 0; i < contacts.Count; i++)
             {
-                if (contacts[i].Phone == number)
+                if (contacts[i].Phone.Contains(number) == true)
                 {
-                    return i;
+                    foundIndexes.Add(i);
                 }
             }
-            return -1;
+            return foundIndexes.ToArray();
         }
         public bool DeleteContact(int idx) 
         {
@@ -121,6 +127,38 @@ namespace finnn
             }
             else { return false; }  
         }
+        public void EditContact(int idx, int c, string new1)
+        {
+            /*idx : the index of the wanted contact 
+             * c : 0 -> name , 1-> email , 2->phone
+             * new1 : the new string you want to add
+             */
+
+            switch (c)
+            {
+                case 0:
+                    contacts[idx].Name = new1;
+                    break;
+                case 1:
+                    contacts[idx].Email = new1;
+                    break;
+                case 2:
+                    contacts[idx].Phone = new1;
+                    break;
+            }
+        }
+        public void SortByName()
+        {
+            contacts.Sort((x, y) => x.Name.CompareTo(y.Name));
+        }
+        public void SortByEmail()
+        {
+            contacts.Sort((x, y) => x.Email.CompareTo(y.Email));
+        }
+        public void SortByPhone()
+        {
+            contacts.Sort((x, y) => x.Phone.CompareTo(y.Phone));
+        }
     }
 
     class Program
@@ -129,7 +167,6 @@ namespace finnn
         {
             PhoneBook phoneBook = new PhoneBook();
             phoneBook.LoadContactsFromFile("contacts.txt");
-            phoneBook.DeleteContact(0);
             phoneBook.SaveContactsToFile("contacts.txt");
         }
     }
